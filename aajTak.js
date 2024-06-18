@@ -24,8 +24,7 @@ function cb(error, response, html) {
   };
 
   
-  let texts = [];
-  
+
 function handlehtml(html){
 
     let $ = cheerio.load(html);
@@ -45,24 +44,18 @@ function handlehtml(html){
         storyAnchors.each( async (index, anchor) => {
             let text = $(anchor).text().trim();
             let href = $(anchor).attr('href');
+            
             let data = await News.findOne({title:text});
             // let data = await News.find({source:"aajTak"});
             if(data) {
+                // insertData(text,href);
                 // await News.deleteMany({})
                 // console.log("kkkk")
             }
             else{
                 insertData(text,href);
-            //     let new_data = new News({
-            //         title:text,
-            //         source:"aajTak",
-            //         read_more:href,
-            //         date:moment.tz('Asia/Kolkata').format('DD MMMM, YYYY')
-            //     })
-            //     let res = await new_data.save();
-            //     // console.log("oops no data", res);
             }
-            texts.push(text);
+            
         });
 
         // Print the extracted texts
@@ -94,16 +87,25 @@ let handlehtml2 = async (html) => {
     let $ = cheerio.load(html);
     
     let content = $('h2.jsx-ace90f4eca22afc7').text().trim();
+    let img_url = $('.Story_associate__image__bYOH_.topImage').find('img').attr('src');
+    
+    // console.log(img_url);
+    // let img = $('.Story_associate__image__bYOH_ topImage').attr('src');
+    
 
     let new_data = new News({
         title:text,
         source:"aajTak",
         read_more:href,
         date:moment.tz('Asia/Kolkata').format('DD MMMM, YYYY'),
-        content:content
+        content:content,
+        img_url:img_url
     })
+    
     let res = await new_data.save();
-    console.log(res);
+    console.log(res)
+    
+    
     
 }
 }
@@ -113,7 +115,7 @@ let handlehtml2 = async (html) => {
 
 
 
-module.exports = texts;
+
 
 
 

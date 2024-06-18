@@ -1,14 +1,9 @@
 const request = require('request');
 const cheerio = require('cheerio');
-const mongoose = require("mongoose")
 
 const News = require("./init/News");
 const moment = require('moment-timezone');
-async function main(){
-    await mongoose.connect('mongodb+srv://afzalshamar:2D0F0rD1LT7BuFH2@news-db.xqg4jba.mongodb.net/?retryWrites=true&w=majority&appName=news-db');
-  }
-  main().then(res=>console.log("connected"));
-  main().catch(err=>console.log(err));
+
 const url = "https://inc42.com"
 
 
@@ -27,7 +22,7 @@ function cb(error, response, html) {
   };
 
   
-  let texts = [];
+  let texts = []
 function handlehtml(html){
 
     let $ = cheerio.load(html);
@@ -44,36 +39,69 @@ function handlehtml(html){
         anchorTags.each( async(idx, anchor) => {
             let text = $(anchor).text().trim();
             let href = $(anchor).attr('href');
-            // let img_url = $(anchor).find('img').attr('src');
-            let img_url = $(anchor).find('img.wp-post-image').attr('src');
-            let data = await News.findOne({title:text});
-            // let data = await News.find({source:"inc42"});
+            // console.log(href);
+            let data = await News.findOne({title:text})
+            // console.log(data);
+            // let data = await News.find({source:"Inc42"});
             if(data) {
-                // console.log("exist");
-                // await News.deleteMany({})
+                // await News.deleteMany({source:"Inc42"})
             }
             else{
-                let new_data = new News({
-                    title:text,
-                    source:"inc42",
-                    img_url:img_url,
-                    read_more:href,
-                    date:moment.tz('Asia/Kolkata').format('DD MMMM, YYYY')
-                })
-                let res = await new_data.save();
-                // console.log("oops no data", res);
+                // console.log(text);
+                // console.log(href);
+                insertData(text,href);
+                texts.push(text)
             }
-            texts.push(text);
-            // console.log(`Text from anchor ${idx + 1} under heading ${index + 1}: ${text}`);
+            
         });
         // texts.forEach((text, index) => {
         //     console.log(`Text ${index + 1}: ${text}`);
         // });
     });
-
-
      
 }
+
+function insertData(text,href){
+    let url2 = href;
+    request(url2, cb2);
+    function cb2(error, response, html) {
+        if(error){
+            console.log('error:', error)
+        }
+    else{
+        handlehtml2(html);
+    } 
+};
+let handlehtml2 = async (html) => {
+    
+    let $ = cheerio.load(html);
+    
+    let paragraphDiv = $('.single-post-summary p');
+    let content = ''
+    paragraphDiv.each((index, element)=>{
+       let paragraphText = $(element).text().trim();
+       content += paragraphText +'\n' ;
+    } )
+
+    /* (undefined)
+    let img_url = $('.attachment-single_post_4\\:3.size-single_post_4\\:3.wp-post-image').attr('src');
+    console.log(img_url);
+    */
+    
+
+    let new_data = new News({
+        title:text,
+        source:"Inc42",
+        read_more:href,
+        date:moment.tz('Asia/Kolkata').format('DD MMMM, YYYY'),
+        content:content,
+    })
+    let res = await new_data.save();
+    // console.log(res);
+    
+}
+}
+
 
 
 
