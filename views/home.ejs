@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+    .roboto-thin {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.roboto-light {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.roboto-regular {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.roboto-medium {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.roboto-bold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.roboto-black {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.roboto-thin-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.roboto-light-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.roboto-regular-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.roboto-medium-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.roboto-bold-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.roboto-black-italic {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+    body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    }
+    .container{
+    flex: 1;
+    }
+    .centered-cards {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+             /* Adjust as needed */
+        }
+        /* .card-container {
+            max-width: 50rem; 
+            margin: 0 auto; 
+        } */
+        .card{
+            margin-top: 3rem;
+            padding: 1rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        
+        .navbar{
+            
+            margin: 2rem 5rem 0rem 5rem !important;
+            border-radius: 0.5rem;
+
+            height: 7rem !important;
+             background-color: rgb(245, 245, 245);
+        }
+   
+        .navbar.scroll-shadow {
+             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3); /* Adds a subtle shadow to the bottom border */
+        }
+         
+        .read-prop{
+            display: flex;
+            flex-direction: column;
+        }
+        .card-text{
+         flex-grow: 1;
+        }
+       
+        
+        .card {
+            height: auto;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            border: 0.2px solid rgba(22, 22, 22, 0.153); /* Just for visual clarity */
+        }
+        .card img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+        .image-container {
+            flex: 0 0 33.3333%; /* This makes sure the image container takes up one-third of the card */
+            overflow: hidden ; /* Ensures that the image does not overflow the container */
+            height: 100%;
+        }
+        .card-body {
+            flex: 1;
+            padding: 1rem; /* Example padding */
+        }
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="./logo.png" alt="Bootstrap" width="30" height="24">
+          </a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        
+        
+        <h1 >AAJTAK NEWS</h1>
+        <% for(let i=0; i<aajTak_data.length; i++){%>
+        <div class="container mt-5">
+            <div class="card">
+                <div class="row g-0 w-100">
+                    <div class="col-md-4 image-container">
+                        <img src="https://thumbs.dreamstime.com/b/news-woodn-dice
+                        -depicting-letters-bundle-small-newspapers-leaning-left
+                        -dice-34802664.jpg" class="img-fluid" alt="Card image">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body " >
+                            <h3 class="card-title" style="color: #44444D;"><%=aajTak_data[i].title %></h3>
+                            <p class="card-text" >
+                                <span style="font-size: small; color: #44444D;"> source: <%=aajTak_data[i].source %>, <%=aajTak_data[i].date %> <br></span> <br>
+                                <span style="font-size: medium; color: #44444D;" > <%=aajTak_data[i].content %></span>
+                                <a href="<%=aajTak_data[i].read_more%>">Read More</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     <%}%>              
+             
+
+      
+        
+    
+
+
+      <h1>INC42 NEWS</h1>
+      <div class="centered-cards">
+          <div class="card-container">
+            <% for(let i=0; i<inc42_data.length;i++){%>
+        <div class="card mt-3" style="max-width: 50rem; align-items:center;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="https://st2.depositphotos.com/6789684/12262/v/450/depositphotos_122620866-stock-illustration-illustration-of-flat-icon.jpg" class="img-fluid rounded-start" style="height: 10rem; border-radius: 1.2rem; " alt="...">
+                </div>
+                <div class="col-md-8 read-prop">
+                    <div class="card-body">
+                        <p class="card-text"><%=inc42_data[i].title %></p>
+                        <p class="card-text">source: <%=inc42_data[i].source %>, <%=inc42_data[i].date %></p>
+                    </div>
+                    <div class="read-more">
+                        <a href="<%=inc42_data[i].read_more%>">Read More</a>
+                    </div>
+                   
+                </div>
+                
+                
+
+            </div>
+        </div>
+        <%}%>
+   </div>
+</div>
+
+
+<h1 >AAJTAK NEWS</h1>
+<div class="centered-cards">
+    <div class="card-container">
+<% for(let i=0; i<aajTakData.length;i++){%>
+    <div class="card mt-3" style="max-width: 50rem; align-items:center;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="https://thumbs.dreamstime.com/b/news-woodn-dice-depicting-letters-bundle-small-newspapers-leaning-left-dice-34802664.jpg" class="img-fluid rounded-start" style="height: 10rem; border-radius: 1.2rem; " alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <p class="card-text"><%= aajTakData[i] %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+  <%}%>
+  </div>
+  </div>
+  
+      <h1>INC42 NEWS</h1>
+      <div class="centered-cards">
+          <div class="card-container">
+              <% for(let i=0; i<inc42Data.length;i++){%>
+                  <div class="card mt-3" style="max-width: 50rem; align-items:center;">
+                      <div class="row g-0">
+                          <div class="col-md-4">
+                              <img src="https://st2.depositphotos.com/6789684/12262/v/450/depositphotos_122620866-stock-illustration-illustration-of-flat-icon.jpg" class="img-fluid rounded-start" style="height: 10rem; border-radius: 1.2rem; " alt="...">
+                            </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text"><%=inc42Data[i] %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      <%}%>
+   </div>
+</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>
+<script>
+    let isScrolling;
+    
+    window.addEventListener('scroll', function() {
+        // Clear our timeout throughout the scroll
+        window.clearTimeout(isScrolling);
+        
+  // Set the box shadow
+  document.querySelector('.navbar').classList.add('scroll-shadow');
+
+  // Set a timeout to run after scrolling ends
+  isScrolling = setTimeout(function() {
+    // Remove the box shadow
+    document.querySelector('.navbar').classList.remove('scroll-shadow');
+  }, 100); // Adjust the timeout delay as needed
+});
+
+
+</script>
