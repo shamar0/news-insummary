@@ -25,6 +25,10 @@ app.listen(PORT, (req,res)=>{
     console.log("listening");
 })
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the home page!');
+});
+
 app.get('/news', async (req, res)=> {
   const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
