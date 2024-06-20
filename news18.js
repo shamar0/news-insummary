@@ -4,9 +4,12 @@ const News = require("./init/News");
 const moment = require('moment-timezone');
 
 
-const url = "https://www.aajtak.in/livetv"
 
-async function fetchNews() {
+
+
+const url = "https://www.news18.com/"
+
+async function fetchNews18() {
     request(url, cb);
 }
 
@@ -27,30 +30,28 @@ function handlehtml(html){
     let $ = cheerio.load(html);
 
     // Select all elements with class 'it_top10-story'
-    let parentDivs = $('.it_top10-story');
+    let div = $('.jsx-2782b689ab6e802f.top_story_sml.jsx-2782b689ab6e802f a');
 
-    // Check if there are at least 3 divs with this class
-    if (parentDivs.length >= 3) {
-        // Select the third div (index 2 for zero-based index)
-        let thirdParentDiv = $(parentDivs[2]);
+    
+        
 
-        // Find all anchor tags inside the third div with class 'it_story-title'
-        let storyAnchors = thirdParentDiv.find('.it_story-title a');
+       
 
         // Iterate over each anchor tag and extract text
-        storyAnchors.each( async (index, anchor) => {
-            let text = $(anchor).text().trim();
+        div.each( async (index, anchor) => {
+            let text = $(anchor).find('h3').text().trim();
             let href = $(anchor).attr('href');
+            // console.log("TEXT "+text+ "  "+"\n");
+            // console.log("HREFF"+href+"  "+"\n");
             
             let data = await News.findOne({title:text});
-            // let data = await News.find({source:"aajTak"});
+            // let data = await News.find({source:"News18"});
             if(data) {
+                // console.log("news 18")
                 // insertData(text,href);
-                // await News.deleteMany({})
-                
+                // await News.deleteMany({source:"News18"})
             }
             else{
-                console.log("aajTak")
                 insertData(text,href);
             }
             
@@ -60,13 +61,7 @@ function handlehtml(html){
         // texts.forEach((text, index) => {
         //     console.log(`Text ${index + 1}: ${text}`);
         // });
-    } else {
-        console.log('There are less than 3 .it_top10-story divs.');
-    }
-    // texts.forEach((text, index) => {
-    //                 console.log(`Text ${index + 1}: ${text}`);
-    //             });
-}
+    } 
 
 
 function insertData(text,href){
@@ -84,18 +79,17 @@ let handlehtml2 = async (html) => {
     
     let $ = cheerio.load(html);
     
-    let content = $('h2.jsx-ace90f4eca22afc7').text().trim();
-    let img_url = $('.Story_associate__image__bYOH_.topImage').find('img').attr('src') || "https://media.istockphoto.com/id/1409309637/vector/breaking-news-label-banner-isolated-vector-design.jpg?s=612x612&w=0&k=20&c=JoQHezk8t4hw8xXR1_DtTeWELoUzroAevPHo0Lth2Ow=";
+    let content = $('p.story_para_0').text().trim();
+    let img_url = $('.jsx-c73291ab902d887a.article_img_inner').find('img').attr('src') || "https://media.istockphoto.com/id/1409309637/vector/breaking-news-label-banner-isolated-vector-design.jpg?s=612x612&w=0&k=20&c=JoQHezk8t4hw8xXR1_DtTeWELoUzroAevPHo0Lth2Ow=";
     
-    let spanText = $('span.jsx-ace90f4eca22afc7.strydate').text();
 
    // Extract only the date and time part, assuming the format remains consistent
-    let date = spanText.replace(/^UPDATED: /, '').trim();
+    let date = $('.jsx-a549b66fbc405149').find('time').text().trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');;
     
 
     let new_data = new News({
         title:text,
-        source:"aajTak",
+        source:"News18",
         read_more:href,
         date:date,
         content:content,
@@ -108,9 +102,9 @@ let handlehtml2 = async (html) => {
 }
 
 
-fetchNews();
+fetchNews18();
 
-setInterval(fetchNews, 900000);
+setInterval(fetchNews18, 900000);
 
-module.exports = { fetchNews };
+module.exports = { fetchNews18 };
 

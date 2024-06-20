@@ -1,31 +1,54 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const mongoose = require("mongoose")
 
-async function main(){
-  await mongoose.connect('mongodb+srv://afzalshamar:2D0F0rD1LT7BuFH2@news-db.xqg4jba.mongodb.net/?retryWrites=true&w=majority&appName=news-db');
-}
-main().then(res=>console.log("connected"));
-main().catch(err=>console.log(err));
-
 
 const News = require("./init/News")
 const path = require("path");
-const inc42Data = require("./inc42")
-const aaj = require("./aajTak")
+require('./aajTak');
+require('./inc42');
+require('./news18');
 
 app.set("view engine", "ejs");
 app.set("views",path.join(__dirname,"/views"));
 
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000, (req,res)=>{
+async function main(){
+  await mongoose.connect(process.env.MONGO_URL);
+}
+main().then(res=>console.log("connected"));
+main().catch(err=>console.log(err));
+
+app.listen(PORT, (req,res)=>{
     console.log("listening");
 })
 
-app.get('/', async (req, res)=> {
-  let inc42_data =await News.find({source:"Inc42"});
-  let aajTak_data =await News.find({source:"aajTak"});
-  res.render("home.ejs", {inc42_data, aajTak_data})
+app.get('/news', async (req, res)=> {
+  const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    // console.log(`Page: ${page}, Limit: ${limit}`);
+
+    const inc42_data = await News.find({source: "Inc42"})
+        .sort({ _id: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+   
+    const aajTak_data = await News.find({source: "aajTak"})
+        .sort({ _id: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+    const news18_data = await News.find({source: "News18"})
+        .sort({ _id: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+    
+        // res.json({inc42_data,aajTak_data})
+    res.render("home.ejs", {inc42_data, aajTak_data, news18_data,page, limit});
+
+
   // console.log(inc42_data);
   // console.log(aajTak_data);
 })

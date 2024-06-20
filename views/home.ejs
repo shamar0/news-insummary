@@ -181,6 +181,29 @@
                 </div>
             </div>
         </div>
+     <%}%>  
+
+        <h1 >NEWS18</h1>
+        <% for(let i=0; i<news18_data.length; i++){%>
+        <div class="container mt-5">
+            <div class="card">
+                <div class="row g-0 w-100">
+                    <div class="col-md-4 image-container">
+                        <img src=<%=news18_data[i].img_url%> class="img-fluid" alt="Card image">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body " >
+                            <h3 class="card-title" style="color: #44444D;"><%=news18_data[i].title %></h3>
+                            <p class="card-text" >
+                                <span style="font-size: small; color: #44444D;"> source: <%=news18_data[i].source %>, <%=news18_data[i].date %> <br></span> <br>
+                                <span style="font-size: medium; color: #44444D;" > <%=news18_data[i].content %></span>
+                                <a href="<%=news18_data[i].read_more%>">Read More</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
      <%}%>    
      
      
@@ -206,7 +229,18 @@
                 </div>
             </div>
         </div>
-     <%}%>              
+     <%}%>      
+      <br>
+      <div>
+        <br>
+        <% if (typeof page !== 'undefined' && page > 1) { %>
+            <a href="/news?page=<%= page - 1 %>&limit=<%= limit %>">Previous</a>
+        <% } %>
+        <% if (typeof page !== 'undefined') { %>
+            <a href="/news?page=<%= page + 1 %>&limit=<%= limit %>">Next</a>
+        <% } %>
+    </div>
+  <br><br>
              
 </div>
 
