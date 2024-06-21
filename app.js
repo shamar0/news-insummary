@@ -52,8 +52,8 @@ app.get('/news', async (req, res)=> {
         .skip((page - 1) * limit)
         .limit(limit);
     
-        // res.json({inc42_data,aajTak_data})
-    res.render("home.ejs", {inc42_data, aajTak_data, news18_data,page, limit});
+        res.json({inc42_data,aajTak_data,news18_data})
+    // res.render("home.ejs", {inc42_data, aajTak_data, news18_data,page, limit});
 
 
   // console.log(inc42_data);
