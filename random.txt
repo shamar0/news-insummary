@@ -1,3 +1,7 @@
+    let img_url = $('.jsx-c73291ab902d887a.article_img_inner').find('img').attr('src') || "https://media.istockphoto.com/id/1409309637/vector/breaking-news-label-banner-isolated-vector-design.jpg?s=612x612&w=0&k=20&c=JoQHezk8t4hw8xXR1_DtTeWELoUzroAevPHo0Lth2Ow=";
+
+
+
 const request = require('request');
 const cheerio = require('cheerio');
 const mongoose = require("mongoose")

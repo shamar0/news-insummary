@@ -95,7 +95,7 @@ let handlehtml2 = async (html) => {
 
     let new_data = new News({
         title:text,
-        source:"aajTak",
+        source:"aajTak | ",
         read_more:href,
         date:date,
         content:content,

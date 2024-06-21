@@ -80,7 +80,6 @@ let handlehtml2 = async (html) => {
     let $ = cheerio.load(html);
     
     let content = $('p.story_para_0').text().trim();
-    let img_url = $('.jsx-c73291ab902d887a.article_img_inner').find('img').attr('src') || "https://media.istockphoto.com/id/1409309637/vector/breaking-news-label-banner-isolated-vector-design.jpg?s=612x612&w=0&k=20&c=JoQHezk8t4hw8xXR1_DtTeWELoUzroAevPHo0Lth2Ow=";
     
 
    // Extract only the date and time part, assuming the format remains consistent
