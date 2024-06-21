@@ -13,7 +13,7 @@ require('./news18');
 app.set("view engine", "ejs");
 app.set("views",path.join(__dirname,"/views"));
 
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
 async function main(){
   await mongoose.connect(process.env.MONGO_URL);
@@ -21,7 +21,7 @@ async function main(){
 main().then(res=>console.log("connected"));
 main().catch(err=>console.log(err));
 
-app.listen(PORT, (req,res)=>{
+app.listen(3000, (req,res)=>{
     console.log("listening");
 })
 
