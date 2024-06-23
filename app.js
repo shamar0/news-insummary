@@ -28,6 +28,7 @@ app.listen(PORT, (req,res)=>{
 app.get('/', (req, res) => {
   res.send('Welcome to the home page!');
 });
+
 app.get('/random', (req, res) => {
   res.send('Hello');
 });
@@ -51,8 +52,11 @@ app.get('/news', async (req, res)=> {
         .sort({ _id: -1 })
         .skip((page - 1) * limit)
         .limit(limit);
+
+    const data = await News.find();
+       
     
-        res.json({inc42_data,aajTak_data,news18_data})
+        res.json(data)
     // res.render("home.ejs", {inc42_data, aajTak_data, news18_data,page, limit});
 
 

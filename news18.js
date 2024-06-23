@@ -92,7 +92,7 @@ let handlehtml2 = async (html) => {
         read_more:href,
         date:date,
         content:content,
-        img_url:img_url
+        
     })
     
     let res = await new_data.save();
