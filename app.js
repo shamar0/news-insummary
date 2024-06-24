@@ -64,7 +64,7 @@ app.get('/news', async (req, res) => {
     .limit(limit);
 
 
-  const data = await News.find();
+  const data = await News.find().sort({ _id: -1 });
 
   res.status(200).json(data);
 
