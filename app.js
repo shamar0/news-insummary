@@ -36,7 +36,7 @@ app.get('/random', (req, res) => {
 const authorize = (req, res, next) => {
   const key = req.headers['authorization'];
 
-  if (key && key === SECRET_KEY) {
+  if (key && key === process.env.SECRET_KEY) {
     next();
   } else {
     res.status(500).json({ error: 'Unauthorized access' });
