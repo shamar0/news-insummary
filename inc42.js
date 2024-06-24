@@ -99,14 +99,14 @@ let handlehtml2 = async (html) => {
         date:date,
         content:content,
     })
-    let res = await new_data.save();
-    console.log(res);
+    // let res = await new_data.save();
+    // console.log(res);
     
 }
 }
 
 fetchInc42News();
-setInterval(fetchInc42News, 900000);
+// setInterval(fetchInc42News, 900000);
 
 module.exports = { fetchInc42News };
 

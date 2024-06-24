@@ -95,15 +95,15 @@ let handlehtml2 = async (html) => {
         
     })
     
-    let res = await new_data.save();
-    console.log(res)
+    // let res = await new_data.save();
+    // console.log(res)
 }
 }
 
 
 fetchNews18();
 
-setInterval(fetchNews18, 900000);
+// setInterval(fetchNews18, 900000);
 
 module.exports = { fetchNews18 };
 

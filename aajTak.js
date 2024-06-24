@@ -102,15 +102,15 @@ let handlehtml2 = async (html) => {
         img_url:img_url
     })
     
-    let res = await new_data.save();
-    console.log(res)
+    // let res = await new_data.save();
+    // console.log(res)
 }
 }
 
 
 fetchNews();
 
-setInterval(fetchNews, 900000);
+// setInterval(fetchNews, 900000);
 
 module.exports = { fetchNews };
 
