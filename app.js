@@ -33,7 +33,17 @@ app.get('/random', (req, res) => {
   res.send('Hello');
 });
 
-app.get('/news', async (req, res) => {
+const authorize = (req, res, next) => {
+  const key = req.headers['authorization'];
+
+  if (key && key === SECRET_KEY) {
+    next();
+  } else {
+    res.status(500).json({ error: 'Unauthorized access' });
+  }
+};
+
+app.get('/news',authorize, async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
   // console.log(`Page: ${page}, Limit: ${limit}`);
@@ -54,17 +64,11 @@ app.get('/news', async (req, res) => {
     .limit(limit);
 
 
-
-  
-    // await News.deleteMany({ date: "Jun 21, 2024 20:04 IST" });
-    // await News.deleteMany({ source: "aajTak" });
-    // await News.deleteMany({ source: "Inc42" });
-
   const data = await News.find();
 
+  res.status(200).json(data);
 
   // res.json({inc42_data,aajTak_data,news18_data})
-  res.json(data)
   // res.render("home.ejs", {inc42_data, aajTak_data, news18_data,page, limit});
 
 
