@@ -35,14 +35,16 @@ app.get('/random', (req, res) => {
 
 const authorize = (req, res, next) => {
   const key = req.headers['authorization'];
+  console.log("Received key:", key);  // Log received key
+  console.log("SECRET_KEY from .env:",process.env.SECRET_KEY);
   if (key && key == process.env.SECRET_KEY) {
     next();
   } else {
-    res.status(500).json({ error: 'Unauthorized access' });
+    res.status(403).json({ status: 'false' });
   }
 };
 
-app.get('/news',authorize, async (req, res) => {
+app.get('/news', async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
   // console.log(`Page: ${page}, Limit: ${limit}`);
