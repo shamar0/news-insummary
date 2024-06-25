@@ -33,17 +33,16 @@ app.get('/random', (req, res) => {
   res.send('Hello');
 });
 
-// const authorize = (req, res, next) => {
-//   const key = req.headers['authorization'];
+const authorize = (req, res, next) => {
+  const key = req.headers['authorization'];
+  if (key && key == process.env.SECRET_KEY) {
+    next();
+  } else {
+    res.status(500).json({ error: 'Unauthorized access' });
+  }
+};
 
-//   if (key && key === process.env.SECRET_KEY) {
-//     next();
-//   } else {
-//     res.status(500).json({ error: 'Unauthorized access' });
-//   }
-// };
-
-app.get('/news', async (req, res) => {
+app.get('/news',authorize, async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
   // console.log(`Page: ${page}, Limit: ${limit}`);
