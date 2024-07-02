@@ -1,3 +1,4 @@
+
 const request = require('request');
 const cheerio = require('cheerio');
 const News = require("./init/News");

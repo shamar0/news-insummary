@@ -12,7 +12,7 @@ const moment = require('moment-timezone');
 
 // async function main() {
 //     await mongoose.connect(process.env.MONGO_URL);
-//     // console.log(process.env.MONGO_URL);
+//     console.log(process.env.MONGO_URL);
 //   }
 //   main().then(res => console.log("connected"));
 //   main().catch(err => console.log(err));
@@ -25,9 +25,10 @@ const moment = require('moment-timezone');
 //     res.send('Welcome to the home page!');
 //   });
 
-const url = "https://www.aajtak.in/livetv"
 
-async function fetchNews() {
+const url = "https://www.hindustantimes.com/latest-news"
+
+async function fetch_ht() {
     request(url, cb);
 }
 
@@ -47,46 +48,34 @@ function handlehtml(html){
 
     let $ = cheerio.load(html);
 
-    // Select all elements with class 'it_top10-story'
-    let parentDivs = $('.it_top10-story');
+    
+    let parentDivs = $('.cartHolder.listView.track.timeAgo.articleClick');
+    let anchors = parentDivs.find('.hdg3 a');
 
-    // Check if there are at least 3 divs with this class
-    if (parentDivs.length >= 3) {
-        // Select the third div (index 2 for zero-based index)
-        let thirdParentDiv = $(parentDivs[2]);
-
-        // Find all anchor tags inside the third div with class 'it_story-title'
-        let storyAnchors = thirdParentDiv.find('.it_story-title a');
-
-        // Iterate over each anchor tag and extract text
-        storyAnchors.each( async (index, anchor) => {
+   
+        anchors.each( async (index, anchor) => {
             let text = $(anchor).text().trim();
             let href = $(anchor).attr('href');
-
+            // Define the base URL
+            let baseURL = 'https://www.hindustantimes.com';
+          
+            href = baseURL + href;
+            
             
             let data = await News.findOne({title:text});
-            // console.log(data);
             // let data = await News.find({source:"aajTak"});
             if(!data) {
                 insertData(text,href);
                 // insertData(text,href);
                 // await News.deleteMany({})
-                
             }
             // else{
-            //     console.log("aajTak")
             // }
             
         });
 
-        // Print the extracted texts
-        // texts.forEach((text, index) => {
-        //     console.log(`Text ${index + 1}: ${text}`);
-        // });
-    } else {
-        console.log('There are less than 3 .it_top10-story divs.');
-    }
-   
+        
+    
 }
 
 
@@ -104,34 +93,35 @@ function insertData(text,href){
 let handlehtml2 = async (html) => {
     
     let $ = cheerio.load(html);
+   
+    let content = $('.storyParagraphFigure p');
+    if(content.length>=1){
+        content = $(content[0]).text().trim();
+    }
+    let img_url = $('picture img');
+    if(img_url.length>=6){
+        img_url=$(img_url[5]).attr('src');
+    }
+    let div = $('.topTime');
+    let date = div.find('.dateTime').text().trim();
     
-    let content = $('h2.jsx-ace90f4eca22afc7').text().trim();
-    let img_url = $('.Story_associate__image__bYOH_.topImage').find('img').attr('src') || "https://media.istockphoto.com/id/1409309637/vector/breaking-news-label-banner-isolated-vector-design.jpg?s=612x612&w=0&k=20&c=JoQHezk8t4hw8xXR1_DtTeWELoUzroAevPHo0Lth2Ow=";
-    
-    let spanText = $('span.jsx-ace90f4eca22afc7.strydate').text();
-
-   // Extract only the date and time part, assuming the format remains consistent
-    let date = spanText.replace(/^UPDATED: /, '').trim();
-    
-
     let new_data = new News({
         title:text,
-        source:"aajTak | ",
+        source:"Hindustan Times | ",
         read_more:href,
         date:date,
         content:content,
         img_url:img_url
     })
-    
-    let res = await new_data.save();
-    console.log(res);
+   let res = await new_data.save();
+    console.log(res)
 }
 }
 
 
-fetchNews();
+fetch_ht();
 
-// setInterval(fetchNews, 900000);
+setInterval(fetch_ht, 900000);
 
-module.exports = { fetchNews };
+module.exports = { fetch_ht };
 

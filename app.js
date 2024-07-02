@@ -7,8 +7,9 @@ const mongoose = require("mongoose")
 const News = require("./init/News")
 const path = require("path");
 require('./aajTak');
-require('./inc42');
-require('./news18');
+// require('./inc42');
+// require('./news18');
+require('./hindustan_times');
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
@@ -29,9 +30,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to the home page!');
 });
 
-app.get('/random', (req, res) => {
-  res.send('Hello');
-});
+
 
 const authorize = (req, res, next) => {
   const key = req.headers['authorization'];
@@ -49,20 +48,20 @@ app.get('/news', async (req, res) => {
   const limit = parseInt(req.query.limit) || 5;
   // console.log(`Page: ${page}, Limit: ${limit}`);
 
-  const inc42_data = await News.find({ source: "Inc42" })
-    .sort({ _id: -1 })
-    .skip((page - 1) * limit)
-    .limit(limit);
+  // const inc42_data = await News.find({ source: "Inc42" })
+  //   .sort({ _id: -1 })
+  //   .skip((page - 1) * limit)
+  //   .limit(limit);
 
-  const aajTak_data = await News.find({ source: "aajTak" })
-    .sort({ _id: -1 })
-    .skip((page - 1) * limit)
-    .limit(limit);
+  // const aajTak_data = await News.find({ source: "aajTak" })
+  //   .sort({ _id: -1 })
+  //   .skip((page - 1) * limit)
+  //   .limit(limit);
 
-  const news18_data = await News.find({ source: "News18" })
-    .sort({ _id: -1 })
-    .skip((page - 1) * limit)
-    .limit(limit);
+  // const news18_data = await News.find({ source: "News18" })
+  //   .sort({ _id: -1 })
+  //   .skip((page - 1) * limit)
+  //   .limit(limit);
 
 
   const data = await News.find().sort({ _id: -1 });
