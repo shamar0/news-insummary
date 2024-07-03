@@ -24,20 +24,9 @@ app.listen(PORT, (req, res) => {
 })
 
 
-const authorize = (req, res, next) => {
-  const key = req.headers['authorization'];
-  console.log("Received key:", key);  // Log received key
-  console.log("SECRET_KEY from .env:", process.env.SECRET_KEY);
-  if (key && key == process.env.SECRET_KEY) {
-    next();
-  } else {
-    res.status(403).json({ status: 'false' });
-  }
-};
-
 app.get('/news', async (req, res) => {
   try {
-    const data = await News.find({ source: "Hindustan Times | " });
+    const data = await News.find().sort({ _id: -1 });
     res.status(200).json(data);
   }
   catch (err) {
