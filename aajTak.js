@@ -85,6 +85,7 @@ function insertData(text, href) {
         })
 
         let res = await new_data.save();
+        console.log(res);
     }
 }
 
