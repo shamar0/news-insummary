@@ -7,6 +7,7 @@ const path = require("path");
 
 require('./aajTak');
 require('./hindustan_times');
+require('./inc42');
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));

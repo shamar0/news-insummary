@@ -1,38 +1,13 @@
-require('dotenv').config()
 const request = require('request');
 const cheerio = require('cheerio');
 const News = require("./init/News");
 const moment = require('moment-timezone');
 
-const mongoose = require("mongoose")
-const express = require('express')
-const app = express()
-
-const PORT = process.env.PORT || 3000;
-
-
-async function main() {
-    await mongoose.connect(process.env.MONGO_URL);
-    // console.log(process.env.MONGO_URL);
-}
-main().then(res => console.log("connected"));
-main().catch(err => console.log(err));
-
-app.listen(PORT, (req, res) => {
-    console.log("listening");
-})
-
-app.get('/', (req, res) => {
-    res.send('Welcome to the home page!');
-});
-
 const url = "https://inc42.com"
 
 async function fetchInc42News() {
-    // console.log("inc42");
     request(url, cb);
 }
-
 
 function cb(error, response, html) {
     if (error) {
@@ -59,8 +34,7 @@ function handlehtml(html) {
         anchorTags.each(async (idx, anchor) => {
             let text = $(anchor).text().trim();
             let href = $(anchor).attr('href');
-            // // console.log(text);
-            // // console.log(href);
+
             let data = await News.findOne({ title: text })
 
             if (!data) {
@@ -99,7 +73,7 @@ function insertData(text, href) {
         let imgElement = $('.single-featured-thumb-container img');
 
         if (imgElement.length > 0) {
-            let src = imgElement.attr('src') ||
+            let img_url = imgElement.attr('src') ||
                 imgElement.attr('data-src') ||
                 imgElement.attr('data-lazy-src') ||
                 imgElement.attr('data-original') ||
@@ -111,13 +85,13 @@ function insertData(text, href) {
 
             let new_data = new News({
                 title: text,
-                source: "Inc42",
+                source: "Inc42 | ",
                 read_more: href,
                 date: date,
                 content: content,
+                img_url: img_url
             })
             let res = await new_data.save();
-            console.log(res);
 
         }
     }
