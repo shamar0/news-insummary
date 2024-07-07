@@ -29,12 +29,12 @@ async function handlehtml(html) {
 
     lis.each(async (index, anchor) => {
         let href = $(anchor).find('a').attr('href');
+        let data = await News.findOne({ read_more: href })
+        if (!data) {
+            insertData(href);
+        }
     });
-    let data = await News.findOne({ read_more: href })
 
-    if (!data) {
-        insertData(href);
-    }
 }
 
 
