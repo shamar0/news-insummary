@@ -69,11 +69,11 @@ function insertData(text, href) {
             content = processContent(content); // Process the content before saving
         }
         let img_url = $('picture img');
-        if (img_url.length ==10) {
-            img_url = $(img_url[5]).attr('src') || "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
+        if (img_url.length >8) {
+            img_url = $(img_url[5]).attr('src');
         }
-        else if (img_url.length ==8) {
-            img_url = $(img_url[4]).attr('src') || "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
+        else if (img_url.length <=8) {
+            img_url = $(img_url[4]).attr('src');
         }
         else{
             img_url = "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
