@@ -87,16 +87,14 @@ function insertData(text, href) {
             content: content,
             img_url: img_url
         })
-
-        let res = await new_data.save();
-        console.log(res);
+        await new_data.save();
     }
 }
 
 
 fetchNews();
 
-setInterval(fetchNews, 3600000);  //1 hour
+setInterval(fetchNews, 60*60*1000);  //1 hour
 
 module.exports = { fetchNews };
 

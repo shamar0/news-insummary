@@ -93,12 +93,11 @@ function insertData(text, href) {
                 content: content,
                 img_url: img_url
             })
-            let res = await new_data.save();
-
+            await new_data.save();
         }
     }
 }
 fetchInc42News();
-setInterval(fetchInc42News, 3600000);  //1 hour
+setInterval(fetchInc42News, 60*60*1000);  //1 hour
 module.exports = { fetchInc42News };
 

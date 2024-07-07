@@ -18,15 +18,9 @@ function cb(error, response, html) {
 
 };
 
-
-
 async function handlehtml(html) {
-
     let $ = cheerio.load(html);
-
-    // Select all elements with class 'it_top10-story'
     let lis = $('.time-list');
-
     lis.each(async (index, anchor) => {
         let href = $(anchor).find('a').attr('href');
         let data = await News.findOne({ read_more: href })
@@ -55,11 +49,8 @@ async function insertData(href) {
 
         let text = $('h1.title').text().trim();
         let content = $('h2.sub-title').text().trim();
-        let date = $('.publish-time-new span').text().trim();
+        let date = $('.publish-time-new span').text().trim().replace('-', '');
         let img_url = "https://india.mom-gmr.org/uploads/tx_lfrogmom/media/16509-1592_import.png";
-
-
-
 
         let new_data = new News({
             title: text,
@@ -70,11 +61,11 @@ async function insertData(href) {
             img_url: img_url
         })
 
-        let res = await new_data.save();
+         await new_data.save();
     }
 }
 
 
 fetchtheHinduNews();
-setInterval(fetchtheHinduNews, 3600000);  //1 hour
+setInterval(fetchtheHinduNews, 4*60*60*1000);  //4 hour
 module.exports = { fetchtheHinduNews };

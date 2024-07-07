@@ -6,8 +6,6 @@ const processContent = require('./utils/contentProcessor');
 
 const url = "https://www.hindustantimes.com/latest-news"
 
-
-
 async function fetch_ht() {
     request(url, cb);
 }
@@ -39,11 +37,9 @@ function handlehtml(html) {
 
         href = baseURL + href;
         let data = await News.findOne({ title: text });
-                if (!data) {
-                    insertData(text, href);
-                }
-        
-
+        if (!data) {
+            insertData(text, href);
+        }
     });
 }
 
@@ -74,14 +70,12 @@ function insertData(text, href) {
             img_url = $(img_url[5]).attr('src');
         }
         if (!img_url || img_url == "https://www.hindustantimes.com/static-content/1y/ht/1x1.webp") {
-            img_url = "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
+            img_url = "https://www.medianews4u.com/wp-content/uploads/2017/01/hindustantimes-logo-2-2.jpg";
         }
 
         if (String(img_url).startsWith("https://")) {
-            // img_url starts with "https://", do nothing
         } else {
-            // Either img_url is not a string or it doesn't start with "https://"
-            img_url = "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
+            img_url = "https://www.medianews4u.com/wp-content/uploads/2017/01/hindustantimes-logo-2-2.jpg";
         }
         let div = $('.topTime');
         let date = div.find('.dateTime').text().trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
@@ -94,14 +88,13 @@ function insertData(text, href) {
             content: content,
             img_url: img_url
         })
-        let res = await new_data.save();
-        console.log(res);
+        await new_data.save();
     }
 }
 
 
 fetch_ht();
 
-setInterval(fetch_ht, 3600000); //1 hour
+setInterval(fetch_ht, 4*60*60*1000); //4 hour
 
 module.exports = { fetch_ht };

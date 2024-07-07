@@ -29,9 +29,7 @@ app.listen(PORT, (req, res) => {
 app.get('/news', async (req, res) => {
   try {
     const data = await News.find().sort({ _id: -1 });
-     await News.deleteMany({img_url:""});
     res.status(200).json(data);
-    // res.send("hi")
   }
   catch (err) {
     res.status(403).json({ status: false, message: "Error retrieving data from database" });
