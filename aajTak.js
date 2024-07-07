@@ -1,6 +1,9 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const News = require("./init/News");
+const moment = require('moment-timezone');
+const  processContent  = require('./utils/contentProcessor');
+
 
 const url = "https://www.aajtak.in/livetv"
 
@@ -68,12 +71,13 @@ function insertData(text, href) {
         let $ = cheerio.load(html);
 
         let content = $('h2.jsx-ace90f4eca22afc7').text().trim();
+        content = processContent(content);
         let img_url = $('.Story_associate__image__bYOH_.topImage').find('img').attr('src') || "https://media.istockphoto.com/id/1409309637/vector/breaking-news-label-banner-isolated-vector-design.jpg?s=612x612&w=0&k=20&c=JoQHezk8t4hw8xXR1_DtTeWELoUzroAevPHo0Lth2Ow=";
 
         let spanText = $('span.jsx-ace90f4eca22afc7.strydate').text();
 
         // Extract only the date and time part, assuming the format remains consistent
-        let date = spanText.replace(/^UPDATED: /, '').trim();
+        let date = spanText.replace(/^UPDATED: /, '').trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
 
         let new_data = new News({
             title: text,

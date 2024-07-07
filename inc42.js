@@ -2,8 +2,9 @@ const request = require('request');
 const cheerio = require('cheerio');
 const News = require("./init/News");
 const moment = require('moment-timezone');
+const  processContent  = require('./utils/contentProcessor');
 
-const url = "https://inc42.com"
+const url = "https://inc42.com";
 
 async function fetchInc42News() {
     request(url, cb);
@@ -68,6 +69,7 @@ function insertData(text, href) {
             let paragraphText = $(element).text().trim();
             content += paragraphText + '\n';
         })
+        content = processContent(content);
 
 
         let imgElement = $('.single-featured-thumb-container img');
@@ -81,7 +83,7 @@ function insertData(text, href) {
                 imgElement.attr('data-cfsrc') || "https://media.istockphoto.com/id/1409309637/vector/breaking-news-label-banner-isolated-vector-design.jpg?s=612x612&w=0&k=20&c=JoQHezk8t4hw8xXR1_DtTeWELoUzroAevPHo0Lth2Ow=";
 
 
-            let date = $('.date span:first-child').text();
+            let date = $('.date span:first-child').text() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
 
             let new_data = new News({
                 title: text,

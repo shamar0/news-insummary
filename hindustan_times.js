@@ -1,8 +1,12 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const News = require("./init/News");
+const moment = require('moment-timezone');
+const  processContent  = require('./utils/contentProcessor');
 
 const url = "https://www.hindustantimes.com/latest-news"
+
+
 
 async function fetch_ht() {
     request(url, cb);
@@ -35,7 +39,6 @@ function handlehtml(html) {
 
         href = baseURL + href;
 
-
         let data = await News.findOne({ title: text });
         if (!data) {
             insertData(text, href);
@@ -63,13 +66,24 @@ function insertData(text, href) {
         let content = $('.storyParagraphFigure p');
         if (content.length >= 1) {
             content = $(content[0]).text().trim();
+            content = processContent(content); // Process the content before saving
         }
         let img_url = $('picture img');
-        if (img_url.length >= 6) {
-            img_url = $(img_url[5]).attr('src') || "https://media.istockphoto.com/id/1409309637/vector/breaking-news-label-banner-isolated-vector-design.jpg?s=612x612&w=0&k=20&c=JoQHezk8t4hw8xXR1_DtTeWELoUzroAevPHo0Lth2Ow=";
+        if (img_url.length ==10) {
+            img_url = $(img_url[5]).attr('src') || "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
         }
+        else if (img_url.length ==8) {
+            img_url = $(img_url[4]).attr('src') || "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
+        }
+        else{
+            img_url = "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
+        }
+        if (!img_url.startsWith("https://")) {
+            img_url = "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
+        }
+
         let div = $('.topTime');
-        let date = div.find('.dateTime').text().trim();
+        let date = div.find('.dateTime').text().trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
 
         let new_data = new News({
             title: text,
@@ -80,6 +94,7 @@ function insertData(text, href) {
             img_url: img_url
         })
         let res = await new_data.save();
+        console.log(res);
     }
 }
 
