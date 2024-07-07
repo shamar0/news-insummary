@@ -2,7 +2,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const News = require("./init/News");
 const moment = require('moment-timezone');
-const  processContent  = require('./utils/contentProcessor');
+const processContent = require('./utils/contentProcessor');
 
 const url = "https://www.hindustantimes.com/latest-news"
 
@@ -38,11 +38,11 @@ function handlehtml(html) {
         let baseURL = 'https://www.hindustantimes.com';
 
         href = baseURL + href;
-
         let data = await News.findOne({ title: text });
-        if (!data) {
-            insertData(text, href);
-        }
+                if (!data) {
+                    insertData(text, href);
+                }
+        
 
     });
 }
@@ -69,19 +69,20 @@ function insertData(text, href) {
             content = processContent(content); // Process the content before saving
         }
         let img_url = $('picture img');
-        if (img_url.length >8) {
+
+        if (img_url.length >= 6) {
             img_url = $(img_url[5]).attr('src');
         }
-        else if (img_url.length <=8) {
-            img_url = $(img_url[4]).attr('src');
-        }
-        else{
-            img_url = "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
-        }
-        if (!img_url.startsWith("https://")) {
+        if (!img_url || img_url == "https://www.hindustantimes.com/static-content/1y/ht/1x1.webp") {
             img_url = "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
         }
 
+        if (String(img_url).startsWith("https://")) {
+            // img_url starts with "https://", do nothing
+        } else {
+            // Either img_url is not a string or it doesn't start with "https://"
+            img_url = "https://cdn.lovesavingsgroup.com/logos/hindustan-times.png";
+        }
         let div = $('.topTime');
         let date = div.find('.dateTime').text().trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
 
@@ -104,4 +105,3 @@ fetch_ht();
 setInterval(fetch_ht, 3600000); //1 hour
 
 module.exports = { fetch_ht };
-
