@@ -28,7 +28,7 @@ function cb(error, response, html) {
     const anchors = headings.find('.css-1icbbxt');
     anchors.each(async(index, element) => {
         let href = $(element).attr('href');
-        let data = await News.findOne({ read_more: href })
+        let data = await News.findOne({ read_more: href });
         if (!data) {
             insertData(href);
         }
@@ -70,11 +70,10 @@ function insertData(href) {
             title: text,
             source: `MedicalNewsToday | `,
             read_more: href,
-            date: `${written_by}, ${date}`,
+            date: `Witten by: ${written_by}, ${date}`,
             content: content,
             img_url: img_url
         })
-        // console.log(new_data);
         await new_data.save();
 
     }
