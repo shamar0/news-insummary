@@ -8,7 +8,8 @@ const path = require("path");
 require('./aajTak');
 require('./hindustan_times');
 require('./inc42');
-require('./the_hindu')
+require('./the_hindu');
+require('./medical_news');
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));

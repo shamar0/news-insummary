@@ -35,14 +35,10 @@ function handlehtml(html) {
         anchorTags.each(async (idx, anchor) => {
             let text = $(anchor).text().trim();
             let href = $(anchor).attr('href');
-
             let data = await News.findOne({ title: text })
-
             if (!data) {
                 insertData(text, href);
             }
-
-
         });
     });
 
