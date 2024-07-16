@@ -4,9 +4,9 @@ const News = require("./init/News");
 const moment = require('moment-timezone');
 const  processContent  = require('./utils/contentProcessor');
 
-const url = "https://www.medicalnewstoday.com/";
+const url = "https://www.indiatoday.in/education-today";
 
-async function fetchMNews() {
+async function fetchIndiaTodayNews() {
     request(url, cb);
 }
 
@@ -23,11 +23,10 @@ function cb(error, response, html) {
  function handlehtml(html) {
 
     let $ = cheerio.load(html);
-
-    const headings = $('#latest-news ul li');
-    const anchors = headings.find('.css-1icbbxt');
+    const anchors = $('.B1S3_story__card__A_fhi h2 a');
     anchors.each(async(index, element) => {
-        let href = $(element).attr('href');
+        let href = $(element).attr('href'); 
+        href= "https://www.indiatoday.in" + href;
         let data = await News.findOne({ read_more: href });
         if (!data) {
             insertData(href);
@@ -49,39 +48,30 @@ function insertData(href) {
     let handlehtml2 = async (html) => {
         let $ = cheerio.load(html);
 
-        let text = $('.css-z468a2 h1');
-        text = $(text[0]).text().trim();
-
-        let img_tag = $('.css-16pk1is img');
-        let img_url = img_tag.attr('src') || "https://i.pngimg.me/thumb/f/720/m2H7H7i8K9A0A0m2.jpg";
-
-        let written_by = $('.css-185ckoq.css-ro87dg ').text();
-        written_by = written_by.split(' ').slice(0, 2).join(' ');
-
-        let content = $('figcaption.css-1ujcy5k').text().trim();
+        let text = $('.jsx-ace90f4eca22afc7.Story_story__content__body__qCd5E.story__content__body.widgetgap h1').text().trim();
+        let content = $('.jsx-ace90f4eca22afc7.Story_story__content__body__qCd5E.story__content__body.widgetgap h2').text().trim();
         content = processContent(content);
-
-        let spans = $('.css-19y29pm span');
-
-        let date = $(spans[4]).text().trim() ;
-        date = date.split(' ').slice(1).join(' ') || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
+        let img_url= $('.topImage img').attr('src');
+        let date = $('.strydate').text().replace('UPDATED: ','').trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
 
         let new_data = new News({
             title: text,
-            source: `MedicalNewsToday | `,
+            source: `India Today | `,
             read_more: href,
             date: date,
             content: content,
             img_url: img_url,
-            category: "Health"
+            category: "Education"
         })
         await new_data.save();
 
     }
 }
-fetchMNews();
-setInterval(fetchMNews, 60*60*1000);  //1 hour
-module.exports = { fetchMNews };
+fetchIndiaTodayNews();
+setInterval(fetchIndiaTodayNews, 60*60*1000);  //1 hour
+module.exports = { fetchIndiaTodayNews };
+
+
 
 
 

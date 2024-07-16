@@ -20,6 +20,9 @@ const NewsSchema = Schema({
       },
       source:{
         type:String
+      },
+      category:{
+        type:String
       }
      
 })

@@ -4,9 +4,9 @@ const News = require("./init/News");
 const moment = require('moment-timezone');
 const  processContent  = require('./utils/contentProcessor');
 
-const url = "https://www.medicalnewstoday.com/";
+const url = "https://indianexpress.com/section/sports/";
 
-async function fetchMNews() {
+async function fetchIndianExpress() {
     request(url, cb);
 }
 
@@ -20,13 +20,13 @@ function cb(error, response, html) {
 
 };
 
- function handlehtml(html) {
+function handlehtml(html) {
 
     let $ = cheerio.load(html);
 
-    const headings = $('#latest-news ul li');
-    const anchors = headings.find('.css-1icbbxt');
-    anchors.each(async(index, element) => {
+    const headings = $('.nation');
+    const anchors = headings.find('.title a');
+    anchors.each(async (index, element) => {
         let href = $(element).attr('href');
         let data = await News.findOne({ read_more: href });
         if (!data) {
@@ -49,43 +49,30 @@ function insertData(href) {
     let handlehtml2 = async (html) => {
         let $ = cheerio.load(html);
 
-        let text = $('.css-z468a2 h1');
-        text = $(text[0]).text().trim();
-
-        let img_tag = $('.css-16pk1is img');
-        let img_url = img_tag.attr('src') || "https://i.pngimg.me/thumb/f/720/m2H7H7i8K9A0A0m2.jpg";
-
-        let written_by = $('.css-185ckoq.css-ro87dg ').text();
-        written_by = written_by.split(' ').slice(0, 2).join(' ');
-
-        let content = $('figcaption.css-1ujcy5k').text().trim();
+        let headings = $('.heading-part');
+        let text = headings.find('.native_story_title').text().trim();
+        let content = headings.find('.synopsis').text().trim();
         content = processContent(content);
+        let date = $('.editor span').text().trim();
+        date = date.replace("Updated: ", "") || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
+        let img_url = $('.custom-caption img') || "https://www.weljii.com/wp-content/uploads/2019/07/indian-express-logo.png";
+        img_url = $(img_url[0]).attr('src');
 
-        let spans = $('.css-19y29pm span');
-
-        let date = $(spans[4]).text().trim() ;
-        date = date.split(' ').slice(1).join(' ') || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
 
         let new_data = new News({
             title: text,
-            source: `MedicalNewsToday | `,
+            source: `Indian Express | `,
             read_more: href,
             date: date,
             content: content,
             img_url: img_url,
-            category: "Health"
+            category: "Sports"
         })
         await new_data.save();
-
     }
 }
-fetchMNews();
-setInterval(fetchMNews, 60*60*1000);  //1 hour
-module.exports = { fetchMNews };
-
-
-
-
-
+fetchIndianExpress();
+setInterval(fetchIndianExpress, 60 * 60 * 1000);  //1 hour
+module.exports = { fetchIndianExpress };
 
 

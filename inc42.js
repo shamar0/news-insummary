@@ -35,7 +35,7 @@ function handlehtml(html) {
         anchorTags.each(async (idx, anchor) => {
             let text = $(anchor).text().trim();
             let href = $(anchor).attr('href');
-            let data = await News.findOne({ title: text })
+            let data = await News.findOne({ title: text });
             if (!data) {
                 insertData(text, href);
             }
@@ -87,7 +87,8 @@ function insertData(text, href) {
                 read_more: href,
                 date: date,
                 content: content,
-                img_url: img_url
+                img_url: img_url,
+                category: "Startup"
             })
             await new_data.save();
         }

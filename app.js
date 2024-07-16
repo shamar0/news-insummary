@@ -10,6 +10,9 @@ require('./hindustan_times');
 require('./inc42');
 require('./the_hindu');
 require('./medical_news');
+require('./health_line');
+require('./indian_express');
+require('./india_today');
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
@@ -29,6 +32,12 @@ app.listen(PORT, (req, res) => {
 
 app.get('/news', async (req, res) => {
   try {
+    // let data = await News.find({source:"Inc42 | "})
+    // data = data.map((el) => ({
+    //   ...el.toObject(), // Convert mongoose document to plain JavaScript object
+    //   category: "Startup"
+    // }));
+    // await data.save();
     const data = await News.find().sort({ _id: -1 });
     res.status(200).json(data);
   }
