@@ -13,6 +13,8 @@ require('./medical_news');
 require('./health_line');
 require('./indian_express');
 require('./india_today');
+require('./mint');
+require('./business_standard');
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));
@@ -32,12 +34,6 @@ app.listen(PORT, (req, res) => {
 
 app.get('/news', async (req, res) => {
   try {
-    // let data = await News.find({source:"Inc42 | "})
-    // data = data.map((el) => ({
-    //   ...el.toObject(), // Convert mongoose document to plain JavaScript object
-    //   category: "Startup"
-    // }));
-    // await data.save();
     const data = await News.find().sort({ _id: -1 });
     res.status(200).json(data);
   }
@@ -45,7 +41,3 @@ app.get('/news', async (req, res) => {
     res.status(403).json({ status: false, message: "Error retrieving data from database" });
   }
 })
-
-
-
-

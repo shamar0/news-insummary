@@ -2,11 +2,11 @@ const request = require('request');
 const cheerio = require('cheerio');
 const News = require("./init/News");
 const moment = require('moment-timezone');
-const  processContent  = require('./utils/contentProcessor');
+const processContent = require('./utils/contentProcessor');
 
-const url = "https://www.medicalnewstoday.com/";
+const url = "https://www.livemint.com/technology/tech-news";
 
-async function fetchMNews() {
+async function fetchMintNews() {
     request(url, cb);
 }
 
@@ -20,19 +20,19 @@ function cb(error, response, html) {
 
 };
 
- function handlehtml(html) {
-
+function handlehtml(html) {
     let $ = cheerio.load(html);
 
-    const headings = $('#latest-news ul li');
-    const anchors = headings.find('.css-1icbbxt');
-    anchors.each(async(index, element) => {
+    const anchors = $('.headline a');
+    anchors.each(async (index, element) => {
         let href = $(element).attr('href');
+        href = "https://www.livemint.com" + href;
         let data = await News.findOne({ read_more: href });
         if (!data) {
             insertData(href);
         }
     })
+
 }
 
 function insertData(href) {
@@ -49,36 +49,31 @@ function insertData(href) {
     let handlehtml2 = async (html) => {
         let $ = cheerio.load(html);
 
-        let text = $('.css-z468a2 h1');
+        let text = $('.headline');
         text = $(text[0]).text().trim();
 
-        let img_tag = $('.css-16pk1is img');
-        let img_url = img_tag.attr('src') || "https://i.pngimg.me/thumb/f/720/m2H7H7i8K9A0A0m2.jpg";
-
-        let written_by = $('.css-185ckoq.css-ro87dg ').text();
-        written_by = written_by.split(' ').slice(0, 2).join(' ');
-
-        let content = $('figcaption.css-1ujcy5k').text().trim();
+        let content = $('.summary h2');
+        content = $(content[0]).text().trim();
         content = processContent(content);
 
-        let spans = $('.css-19y29pm span');
+        let img_url = $('picture img').attr('src');
 
-        let date = $(spans[4]).text().trim() ;
-        date = date.split(' ').slice(1).join(' ') || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
+        let date = $('.newTimeStamp');
+        date = $(date[0]).text().trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
 
         let new_data = new News({
             title: text,
-            source: `MedicalNewsToday | `,
+            source: `Mint | `,
             read_more: href,
             date: date,
             content: content,
             img_url: img_url,
-            category: "Health"
+            category: "Tech"
         })
         await new_data.save();
 
     }
 }
-fetchMNews();
-setInterval(fetchMNews, 60*60*1000);  //1 hour
-module.exports = { fetchMNews };
+fetchMintNews();
+setInterval(fetchMintNews, 60 * 60 * 1000);  //1 hour
+module.exports = { fetchMintNews };
