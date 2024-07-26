@@ -70,13 +70,13 @@ function insertData(href) {
             img_url: img_url,
             category: "Health"
         })
-        await new_data.save();
+        try {
+            await new_data.save();
+        } catch (err) {
+            console.error("Error saving document(healthline):", err);
+        }
     }
 }
 fetchHealthLineNews();
 setInterval(fetchHealthLineNews, 60 * 60 * 1000);  //1 hour
 module.exports = { fetchHealthLineNews };
-
-
-
-

@@ -3,17 +3,16 @@ const {Schema} = mongoose;
 
 const NewsSchema = Schema({
     title: {
-      type:String ,
+      type:String
     },
     content: {
-       type:String,
-       
+       type:String
     },
     img_url:{
       type: String
     },
       date:{
-        type:String,
+        type:String
       } ,
       read_more:{
         type:String
@@ -28,6 +27,5 @@ const NewsSchema = Schema({
 })
 
 const News = mongoose.model("News",NewsSchema);
-
 module.exports =  News;
 

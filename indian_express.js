@@ -68,11 +68,13 @@ function insertData(href) {
             img_url: img_url,
             category: "Sports"
         })
-        await new_data.save();
+        try {
+            await new_data.save();
+        } catch (err) {
+            console.error("Error saving document(indian express):", err);
+        }
     }
 }
 fetchIndianExpress();
 setInterval(fetchIndianExpress, 60 * 60 * 1000);  //1 hour
 module.exports = { fetchIndianExpress };
-
-

@@ -51,7 +51,7 @@ function insertData(href) {
         let text = $('.jsx-ace90f4eca22afc7.Story_story__content__body__qCd5E.story__content__body.widgetgap h1').text().trim();
         let content = $('.jsx-ace90f4eca22afc7.Story_story__content__body__qCd5E.story__content__body.widgetgap h2').text().trim();
         content = processContent(content);
-        let img_url= $('.topImage img').attr('src');
+        let img_url= $('.topImage img').attr('src') || "https://seeklogo.com/images/I/india-today-logo-0218513CB5-seeklogo.com.png";
         let date = $('.strydate').text().replace('UPDATED: ','').trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
 
         let new_data = new News({
@@ -63,8 +63,11 @@ function insertData(href) {
             img_url: img_url,
             category: "Education"
         })
-        await new_data.save();
-
+        try {
+            await new_data.save();
+        } catch (err) {
+            console.error("Error saving document(india today):", err);
+        }
     }
 }
 fetchIndiaTodayNews();

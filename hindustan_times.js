@@ -88,7 +88,11 @@ function insertData(text, href) {
             content: content,
             img_url: img_url
         })
-        await new_data.save();
+        try {
+            await new_data.save();
+        } catch (err) {
+            console.error("Error saving document(hindustan times):", err);
+        }
     }
 }
 

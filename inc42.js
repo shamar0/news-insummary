@@ -22,26 +22,19 @@ function cb(error, response, html) {
 
 
 
-function handlehtml(html) {
+async function handlehtml(html) {
 
     let $ = cheerio.load(html);
-
-    // Select all elements with class 'entry-title recommended-block-head'
-    const headings = $('.entry-title.recommended-block-head');
-
-    headings.each((index, element) => {
-        const anchorTags = $(element).find('a');
-
-        anchorTags.each(async (idx, anchor) => {
-            let text = $(anchor).text().trim();
-            let href = $(anchor).attr('href');
-            let data = await News.findOne({ title: text });
-            if (!data) {
-                insertData(text, href);
-            }
-        });
-    });
-
+    const anchorTags = $('.entry-title.recommended-block-head a');
+    for (let idx = 0; idx < 7; idx++) {
+        let anchor = anchorTags[idx];
+        let text = $(anchor).text().trim();
+        let href = $(anchor).attr('href');
+        let data = await News.findOne({ read_more: href });
+        if (!data) {
+            insertData(text,href);
+        }
+    }    
 }
 
 function insertData(text, href) {
@@ -90,7 +83,11 @@ function insertData(text, href) {
                 img_url: img_url,
                 category: "Startup"
             })
-            await new_data.save();
+            try {
+                await new_data.save();
+            } catch (err) {
+                console.error("Error saving document(inc42):", err);
+            }
         }
     }
 }

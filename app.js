@@ -11,10 +11,15 @@ require('./inc42');
 require('./the_hindu');
 require('./medical_news');
 require('./health_line');
-require('./indian_express');
+// require('./indian_express');
 require('./india_today');
 require('./mint');
 require('./business_standard');
+require('./times_of_india');
+require('./news18');
+require('./enviro_india_today');
+require('./ndtv');
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views"));

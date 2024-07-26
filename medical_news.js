@@ -75,7 +75,11 @@ function insertData(href) {
             img_url: img_url,
             category: "Health"
         })
-        await new_data.save();
+        try {
+            await new_data.save();
+        } catch (err) {
+            console.error("Error saving document(medical):", err);
+        }
 
     }
 }

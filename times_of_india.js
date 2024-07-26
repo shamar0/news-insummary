@@ -4,9 +4,9 @@ const News = require("./init/News");
 const moment = require('moment-timezone');
 const processContent = require('./utils/contentProcessor');
 
-const url = "https://www.livemint.com/technology/tech-news";
+const url = "https://timesofindia.indiatimes.com/entertainment/hindi/bollywood/news";
 
-async function fetchMintNews() {
+async function fetchTOINews() {
     request(url, cb);
 }
 
@@ -20,19 +20,19 @@ function cb(error, response, html) {
 
 };
 
-function handlehtml(html) {
+async function handlehtml(html) {
     let $ = cheerio.load(html);
 
-    const anchors = $('.headline a');
-    anchors.each(async (index, element) => {
+    const anchors = $('.md_news_box p a');
+    for (let i = 0; i < 7; i++) {
+        let element = anchors[i];
         let href = $(element).attr('href');
-        href = "https://www.livemint.com" + href;
+        href = "https://timesofindia.indiatimes.com" + href;
         let data = await News.findOne({ read_more: href });
         if (!data) {
             insertData(href);
         }
-    })
-
+    }
 }
 
 function insertData(href) {
@@ -49,35 +49,28 @@ function insertData(href) {
     let handlehtml2 = async (html) => {
         let $ = cheerio.load(html);
 
-        let text = $('.headline');
-        text = $(text[0]).text().trim();
-
-        let content = $('.summary h2');
-        content = $(content[0]).text().trim();
+        let text = $('.HNMDR span').text().trim();
+        let img_url = $('.wJnIp img').attr('src') || "https://cdn.landesa.org/wp-content/uploads/Times-of-India-logo-TOI.jpg";
+        let date = $('.xf8Pm.byline span').text().replace('Updated: ', '').trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
+        let content = $('.M1rHh').text().trim();
         content = processContent(content);
-
-        let img_url = $('picture img').attr('src');
-
-        let date = $('.newTimeStamp');
-        date = $(date[0]).text().trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
 
         let new_data = new News({
             title: text,
-            source: `Mint | `,
+            source: `TOI | `,
             read_more: href,
             date: date,
             content: content,
             img_url: img_url,
-            category: "Tech"
+            category: "Entertainment"
         })
         try {
             await new_data.save();
         } catch (err) {
-            console.error("Error saving document(mint):", err);
+            console.error("Error saving document(toi):", err);
         }
-
     }
 }
-fetchMintNews();
-setInterval(fetchMintNews, 60 * 60 * 1000);  //1 hour
-module.exports = { fetchMintNews };
+fetchTOINews();
+setInterval(fetchTOINews, 60 * 60 * 1000);  //1 hour
+module.exports = { fetchTOINews };

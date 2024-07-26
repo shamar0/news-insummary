@@ -63,7 +63,11 @@ function insertData(href) {
             img_url: img_url,
             category: "IT"
         })
-        await new_data.save();
+        try {
+            await new_data.save();
+        } catch (err) {
+            console.error("Error saving document(business_standard):", err);
+        }
     }
 }
 fetchBSNews();
