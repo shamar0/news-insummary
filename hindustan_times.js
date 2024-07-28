@@ -98,7 +98,5 @@ function insertData(text, href) {
 
 
 fetch_ht();
-
 setInterval(fetch_ht, 4*60*60*1000); //4 hour
-
 module.exports = { fetch_ht };

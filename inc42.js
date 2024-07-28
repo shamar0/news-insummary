@@ -26,7 +26,7 @@ async function handlehtml(html) {
 
     let $ = cheerio.load(html);
     const anchorTags = $('.entry-title.recommended-block-head a');
-    for (let idx = 0; idx < 7; idx++) {
+    for (let idx = 1; idx < 3; idx++) {
         let anchor = anchorTags[idx];
         let text = $(anchor).text().trim();
         let href = $(anchor).attr('href');

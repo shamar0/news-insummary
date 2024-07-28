@@ -23,7 +23,7 @@ async function handlehtml(html) {
         let href = $(element).attr('href');
         let data = await News.findOne({ read_more: href });
         if (!data) {
-            await insertData(href); // Ensure data is processed sequentially
+            await insertData(href); 
         }
     }
 }
@@ -43,7 +43,7 @@ async function handlehtml2(html, href) {
     let text = $('.jsx-ace90f4eca22afc7.Story_strytitle__MYXmR').text().trim();
     if (!text) {
         console.log("Skipping article with empty title.");
-        return; // Skip insertion if title is empty
+        return; 
     }
 
     let content = $('.story-kicker.wapper__kicker h2').text().trim();

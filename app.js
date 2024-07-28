@@ -11,7 +11,7 @@ require('./inc42');
 require('./the_hindu');
 require('./medical_news');
 require('./health_line');
-// require('./indian_express');
+require('./indian_express');
 require('./india_today');
 require('./mint');
 require('./business_standard');
@@ -40,7 +40,7 @@ app.listen(PORT, (req, res) => {
 app.get('/news', async (req, res) => {
   try {
     const data = await News.find().sort({ _id: -1 });
-    res.status(200).json(data);
+    res.status(200).json(data);   
   }
   catch (err) {
     res.status(403).json({ status: false, message: "Error retrieving data from database" });

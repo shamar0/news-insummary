@@ -58,7 +58,6 @@ async function handlehtml(html) {
 }
 }
 
-
 fetchNdtvNews();
 setInterval(fetchNdtvNews, 60 * 60 * 1000);  //1 hour
 module.exports = { fetchNdtvNews };
