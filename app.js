@@ -8,7 +8,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 
-
 app.use(express.json());
 app.use(cors()); 
 
@@ -38,9 +37,11 @@ main().catch(err => console.log(err));
 app.listen(PORT, (req, res) => {
   console.log("listening");
 })
+
 app.get('/',(req,res)=>{
   res.send("hi");
 })
+
 app.get('/news', async (req, res) => {
   try {
     const data = await News.find().sort({ _id: -1 });
