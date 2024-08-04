@@ -71,7 +71,7 @@ function insertData(href) {
     }
 }
 fetchIndiaTodayNews();
-setInterval(fetchIndiaTodayNews, 60*60*1000);  //1 hour
+setInterval(fetchIndiaTodayNews, 24*60*60*1000); 
 module.exports = { fetchIndiaTodayNews };
 
 

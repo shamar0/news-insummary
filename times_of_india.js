@@ -72,5 +72,5 @@ function insertData(href) {
     }
 }
 fetchTOINews();
-setInterval(fetchTOINews, 60 * 60 * 1000);  //1 hour
+setInterval(fetchTOINews,24 * 60 * 60 * 1000);  //1 hour
 module.exports = { fetchTOINews };

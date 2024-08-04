@@ -84,5 +84,5 @@ function insertData(href) {
     }
 }
 fetchMNews();
-setInterval(fetchMNews, 60*60*1000);  //1 hour
+setInterval(fetchMNews, 24*60*60*1000);  
 module.exports = { fetchMNews };

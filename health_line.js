@@ -78,5 +78,5 @@ function insertData(href) {
     }
 }
 fetchHealthLineNews();
-setInterval(fetchHealthLineNews, 60 * 60 * 1000);  //1 hour
+setInterval(fetchHealthLineNews, 24* 60 * 60 * 1000);  //1 hour
 module.exports = { fetchHealthLineNews };

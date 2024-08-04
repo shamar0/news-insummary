@@ -36,7 +36,7 @@ function handlehtml(html) {
         let baseURL = 'https://www.hindustantimes.com';
 
         href = baseURL + href;
-        let data = await News.findOne({ title: text });
+        let data = await News.find({ title: text });
         if (!data) {
             insertData(text, href);
         }
@@ -98,5 +98,5 @@ function insertData(text, href) {
 
 
 fetch_ht();
-setInterval(fetch_ht, 4*60*60*1000); //4 hour
+setInterval(fetch_ht, 24*60*60*1000); 
 module.exports = { fetch_ht };

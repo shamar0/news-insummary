@@ -3,7 +3,14 @@ const express = require('express')
 const app = express()
 const mongoose = require("mongoose")
 const News = require("./init/News")
-const path = require("path");
+const User = require("./init/User")
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
+
+
+app.use(express.json());
+app.use(cors()); 
 
 require('./aajTak');
 require('./hindustan_times');
@@ -20,10 +27,6 @@ require('./news18');
 require('./enviro_india_today');
 require('./ndtv');
 
-
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "/views"));
-
 const PORT = process.env.PORT || 3000;
 
 async function main() {
@@ -35,14 +38,178 @@ main().catch(err => console.log(err));
 app.listen(PORT, (req, res) => {
   console.log("listening");
 })
-
-
+app.get('/',(req,res)=>{
+  res.send("hi");
+})
 app.get('/news', async (req, res) => {
   try {
     const data = await News.find().sort({ _id: -1 });
+    res.status(200).json(data);    
+  }
+  catch (err) {
+    res.status(403).json({ status: false, message: "Error retrieving data from database" });
+  }
+})
+
+app.get('/user', async (req, res) => {
+  try {
+    const data = await User.find().sort({ _id: -1 });
     res.status(200).json(data);   
   }
   catch (err) {
     res.status(403).json({ status: false, message: "Error retrieving data from database" });
   }
 })
+
+
+app.post('/signup', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Username already exists', success:false });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const user = new User({
+      username,
+      password: hashedPassword
+    });
+    await user.save();
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+    const { password: _, ...userWithoutPassword } = user.toObject();
+    res.status(201).json({ user: userWithoutPassword, token, success:true });
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating new user', error: error.message });
+  }
+});
+
+
+
+// Login User
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    // const user = await User.findOne({ username });
+    let user = await User.findOne({ username });
+    if (user && await bcrypt.compare(password, user.password)) {
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+      user = await User.findOne({ username }).select('-password');
+      res.json({user, token, success:true });
+    } else {
+      res.status(401).json({ message: 'Invalid credentials', success:false });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'Access token is missing' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: 'Invalid token', success:false });
+    }
+    req.user = user;
+    next();
+  });
+};
+app.get('/check-auth', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+app.post('/users/save-article', authenticateToken, async (req, res) => {
+  const { articleId } = req.body;
+  try {
+    const articleExists = await News.findById(articleId);
+    if (!articleExists) {
+      return res.status(404).json({ message: 'Article not found' });
+    }
+
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (!user.savedArticles.includes(articleId)) {
+      user.savedArticles.push(articleId);
+      await user.save();
+    }
+
+    res.status(200).json({ message: 'Article saved successfully', savedArticles: user.savedArticles, savedArticleId: articleId, success:true});
+  } catch (error) {
+    res.status(500).json({ message: error.message, success:false });
+  }
+});
+
+app.post('/users/remove-article', authenticateToken, async (req, res) => {
+  const { articleId } = req.body;
+  try {
+    const articleExists = await News.findById(articleId);
+    if (!articleExists) {
+      return res.status(404).json({ message: 'Article not found', success: false });
+    }
+
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found', success: false });
+    }
+
+    const articleIndex = user.savedArticles.indexOf(articleId);
+    if (articleIndex === -1) {
+      return res.status(400).json({ message: 'Article not in saved list', success: false });
+    }
+
+    user.savedArticles.splice(articleIndex, 1); // Remove the article from the savedArticles array
+    await user.save();
+
+    res.status(200).json({ message: 'Article removed successfully', savedArticles: user.savedArticles, removedArticleId: articleId, success: true });
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+});
+
+
+app.get('/users/saved-articles', authenticateToken, async (req, res) => {
+  console.log("Received request to /users/saved-articles");
+  try {
+    const userId = req.user.userId;
+    console.log("User ID from token:", userId);
+
+    const user = await User.findById(userId);
+    if (!user) {
+      console.log("User not found with ID:", userId);
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log("User found, retrieving saved articles");
+    const articles = await News.find({
+      '_id': { $in: user.savedArticles }
+    });
+
+    console.log("Articles retrieved:", articles);
+    res.json(articles);
+  } catch (error) {
+    console.error("Error occurred:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+

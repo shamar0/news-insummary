@@ -58,5 +58,5 @@ async function handlehtml(html) {
 
 
 fetchIndianExpress();
-setInterval(fetchIndianExpress, 60 * 60 * 1000);  //1 hour
+setInterval(fetchIndianExpress,24 * 60 * 60 * 1000); 
 module.exports = { fetchIndianExpress };

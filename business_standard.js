@@ -71,5 +71,5 @@ function insertData(href) {
     }
 }
 fetchBSNews();
-setInterval(fetchBSNews, 60 * 60 * 1000);  //1 hour
+setInterval(fetchBSNews, 24 * 60 * 60 * 1000);  //24 hour
 module.exports = { fetchBSNews };

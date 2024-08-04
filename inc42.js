@@ -92,6 +92,6 @@ function insertData(text, href) {
     }
 }
 fetchInc42News();
-setInterval(fetchInc42News, 60*60*1000);  //1 hour
+setInterval(fetchInc42News, 24*60*60*1000);
 module.exports = { fetchInc42News };
 

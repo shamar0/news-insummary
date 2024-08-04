@@ -94,7 +94,7 @@ function insertData(text, href) {
 
 fetchNews();
 
-setInterval(fetchNews, 60*60*1000);  //1 hour
+setInterval(fetchNews, 24*60*60*1000);  //24 hour
 
 module.exports = { fetchNews };
 

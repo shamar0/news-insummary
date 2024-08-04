@@ -74,6 +74,6 @@ async function handlehtml2(html, href) {
 }
 
 fetchEITNews();
-setInterval(fetchEITNews, 60 * 60 * 1000);  // Fetch news every hour
+setInterval(fetchEITNews, 24 * 60 * 60 * 1000); 
 
 module.exports = { fetchEITNews };

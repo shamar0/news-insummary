@@ -71,5 +71,5 @@ async function insertData(href) {
 
 
 fetchtheHinduNews();
-setInterval(fetchtheHinduNews, 4*60*60*1000);  //4 hour
+setInterval(fetchtheHinduNews, 24*60*60*1000);  //4 hour
 module.exports = { fetchtheHinduNews };
