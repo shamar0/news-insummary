@@ -7,24 +7,28 @@ const User = require("./init/User")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const { google } = require('googleapis');
+const { OAuth2Client } = require('google-auth-library');
+
+
 
 app.use(express.json());
 app.use(cors()); 
 
-require('./aajTak');
-require('./hindustan_times');
-require('./inc42');
-require('./the_hindu');
-require('./medical_news');
-require('./health_line');
-require('./indian_express');
-require('./india_today');
-require('./mint');
-require('./business_standard');
-require('./times_of_india');
-require('./news18');
-require('./enviro_india_today');
-require('./ndtv');
+// require('./aajTak');
+// require('./hindustan_times');
+// require('./inc42');
+// require('./the_hindu');
+// require('./medical_news');
+// require('./health_line');
+// require('./indian_express');
+// require('./india_today');
+// require('./mint');
+// require('./business_standard');
+// require('./times_of_india');
+// require('./news18');
+// require('./enviro_india_today');
+// require('./ndtv');
 
 const PORT = process.env.PORT || 3000;
 
@@ -34,7 +38,7 @@ async function main() {
 main().then(res => console.log("connected"));
 main().catch(err => console.log(err));
 
-app.listen(PORT, (req, res) => {
+app.listen(8080, (req, res) => {
   console.log("listening");
 })
 
@@ -61,6 +65,46 @@ app.get('/user', async (req, res) => {
     res.status(403).json({ status: false, message: "Error retrieving data from database" });
   }
 })
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  `http://localhost:8080/auth/google/callback` // or your deployed URL
+);
+
+app.post('/auth/google', async (req, res) => {
+  const { code } = req.body;
+  try {
+    // Exchange code for tokens
+    const { tokens } = await oauth2Client.getToken(code);
+    oauth2Client.setCredentials(tokens);
+
+    // Retrieve user information
+    const oauth2 = google.oauth2({
+      auth: oauth2Client,
+      version: 'v2',
+    });
+
+    const userInfo = await oauth2.userinfo.get();
+
+    // Check if the user exists or create a new user
+    let user = await User.findOne({ username: userInfo.data.email });
+    if (!user) {
+      user = new User({
+        username: userInfo.data.email,
+        password: userInfo.data.email, // Store a dummy password or use a hashed token
+      });
+      await user.save();
+    }
+
+    // Generate JWT
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+    res.json({ token, user });
+  } catch (error) {
+    console.error('Google auth error:', error);
+    res.status(500).json({ message: 'Authentication failed' });
+  }
+});
 
 
 app.post('/signup', async (req, res) => {
