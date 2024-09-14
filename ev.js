@@ -4,9 +4,9 @@ const News = require("./init/News");
 const moment = require('moment-timezone');
 const processContent = require('./utils/contentProcessor');
 
-const url = "https://www.news18.com/politics/";
+const url = "https://auto.hindustantimes.com/electric-vehicles";
 
-async function fetchNews18News() {
+async function fetchEvNews() {
     request(url, cb);
 }
 
@@ -20,12 +20,12 @@ function cb(error, response, html) {
 
 };
 
-async function handlehtml(html) {
+function handlehtml(html) {
     let $ = cheerio.load(html);
+    const parentDiv = $('.StoryWidget_sliderBox__u7Os0');
 
-    const anchors = $('.jsx-50600299959a4159.top_story_right li a');
-    anchors.each(async (index, element) => {
-        let href = $(element).attr('href');
+    parentDiv.each(async (index, element) => {
+        let href = $(element).find('a').attr('href');
         let data = await News.findOne({ read_more: href });
         if (!data) {
             insertData(href);
@@ -46,32 +46,28 @@ function insertData(href) {
     };
     let handlehtml2 = async (html) => {
         let $ = cheerio.load(html);
-        
-        let text = $('.jsx-9ea5c73edc9a77a6.article_heading').text().trim();
-        let img_url = $('.jsx-9ea5c73edc9a77a6.article_byno_limg.article_byno_limg_new img').attr('src') || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8SCcvLrARb_qxa_WONCK4Uv5Ggeqsq0Uz3w&s";
-        let date = $('.jsx-9ea5c73edc9a77a6.article_details_list time').text().trim() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');;
-        let content = $('.jsx-9ea5c73edc9a77a6.short_discription').text().trim();
+        let text = $('.StoryTopContent h1').text();
+        const img_url = $('.imgWrapper picture img').attr('src') || "https://images.hindustantimes.com/auto/auto-images/default/default-1600x900.jpg";
+        let content = $('.StoryTopDescpra.storySummary li').text();
         content = processContent(content);
-
+        let date = $('.whowhen .date').text() || moment.tz("Asia/Kolkata").format('DD MMMM, YYYY');
         let new_data = new News({
             title: text,
-            source: `News18 | `,
+            source: `HT Auto |`,
             read_more: href,
             date: date,
             content: content,
             img_url: img_url,
-            category: "Politics"
+            category: "Ev"
         })
         try {
             await new_data.save();
+            console.log(new_data);
         } catch (err) {
-            console.error("Error saving document(news18):", err);
+            console.error("Error saving document(EV):", err);
         }
     }
 }
-fetchNews18News();
-setInterval(fetchNews18News,2 * 24 * 60 * 60 * 1000);  //2 day
-module.exports = { fetchNews18News };
-
-
-
+fetchEvNews();
+setInterval(fetchEvNews, 24 * 60 * 60 * 1000);  //1 hour
+module.exports = { fetchEvNews };

@@ -63,7 +63,6 @@ async function handlehtml2(html, href) {
 
     try {
         await new_data.save();
-        console.log(`Article saved: ${text}`);
     } catch (err) {
         if (err.code === 11000) {
             console.log("Duplicate key error. Document with this title already exists.");
@@ -74,6 +73,5 @@ async function handlehtml2(html, href) {
 }
 
 fetchEITNews();
-setInterval(fetchEITNews, 24 * 60 * 60 * 1000); 
-
+setInterval(fetchEITNews,2 * 24 * 60 * 60 * 1000);  
 module.exports = { fetchEITNews };

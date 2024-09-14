@@ -79,5 +79,5 @@ function insertData(href) {
     }
 }
 fetchMintNews();
-setInterval(fetchMintNews,24 * 60 * 60 * 1000); 
+setInterval(fetchMintNews,2 * 24 * 60 * 60 * 1000); 
 module.exports = { fetchMintNews };
