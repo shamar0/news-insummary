@@ -50,7 +50,8 @@ async function insertData(href) {
         let text = $('h1.title').text().trim();
         let content = $('h2.sub-title').text().trim();
         let date = $('.publish-time-new span').text().trim().replace('-', '');
-        let img_url = "https://india.mom-gmr.org/uploads/tx_lfrogmom/media/16509-1592_import.png";
+        let img_url = $('picture source');
+        img_url = $(img_url[3]).attr("srcset") || "https://india.mom-gmr.org/uploads/tx_lfrogmom/media/16509-1592_import.png";
 
         let new_data = new News({
             title: text,
@@ -60,7 +61,7 @@ async function insertData(href) {
             content: content,
             img_url: img_url
         })
-
+ 
         try {
             await new_data.save();
         } catch (err) {
