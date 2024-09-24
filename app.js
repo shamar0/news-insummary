@@ -15,21 +15,21 @@ const { OAuth2Client } = require('google-auth-library');
 app.use(express.json());
 app.use(cors()); 
 
-require('./aajTak');
-require('./hindustan_times');
-require('./inc42');
-require('./the_hindu');
-require('./medical_news');
-require('./health_line');
-require('./indian_express');
-require('./india_today');
-require('./mint');
-require('./business_standard');
-require('./times_of_india');
-require('./news18');
-require('./enviro_india_today');
-require('./ndtv');
-require('./ev');
+// require('./aajTak');
+// require('./hindustan_times');
+// require('./inc42');
+// require('./the_hindu');
+// require('./medical_news');
+// require('./health_line');
+// require('./indian_express');
+// require('./india_today');
+// require('./mint');
+// require('./business_standard');
+// require('./times_of_india');
+// require('./news18');
+// require('./enviro_india_today');
+// require('./ndtv');
+// require('./ev');
 
 const PORT = process.env.PORT;
 
