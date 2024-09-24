@@ -31,7 +31,7 @@ require('./enviro_india_today');
 require('./ndtv');
 require('./ev');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 async function main() {
   await mongoose.connect(process.env.MONGO_URL);
@@ -39,7 +39,7 @@ async function main() {
 main().then(res => console.log("connected"));
 main().catch(err => console.log(err));
 
-app.listen(8080, (req, res) => {
+app.listen(PORT , (req, res) => {
   console.log("listening");
 })
 
