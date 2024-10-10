@@ -62,7 +62,6 @@ function insertData(href) {
         })
         try {
             await new_data.save();
-            console.log(new_data);
         } catch (err) {
             console.error("Error saving document(EV):", err);
         }

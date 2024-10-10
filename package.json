@@ -28,6 +28,7 @@
     "moment-timezone": "^0.5.45",
     "mongodb": "^6.7.0",
     "mongoose": "^8.4.1",
+    "openai": "^3.2.1",
     "puppeteer": "^22.11.0",
     "request": "^2.88.2"
   }

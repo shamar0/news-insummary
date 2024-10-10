@@ -77,6 +77,6 @@ function insertData(href) {
         }
     }
 }
-// fetchHealthLineNews();
-// setInterval(fetchHealthLineNews, 24* 60 * 60 * 1000);  //1 hour
+fetchHealthLineNews();
+setInterval(fetchHealthLineNews, 24* 60 * 60 * 1000);  //1 hour
 module.exports = { fetchHealthLineNews };
